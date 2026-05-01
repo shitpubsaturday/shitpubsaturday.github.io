@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shit Pub Saturday</title>
+    <style>
+        :root {
+            --main-font: "Comic Sans MS", cursive, sans-serif;
+            --bg-start: #ffeb3b;
+            --bg-end: #ff9800;
+            --section-bg: #fff176;
+            --accent: #e91e63;
+            --button-bg: #00e676;
+        }
+
+        body {
+            background: linear-gradient(var(--bg-start), var(--bg-end));
+            font-family: var(--main-font);
+            color: #000;
+            margin: 0;
+            padding: 10px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            border: 8px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            padding: 15px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            color: var(--accent);
+            text-align: center;
+            text-shadow: 3px 3px 0 #000;
+            margin: 10px 0 8px;
+        }
+        marquee {
+            background: #000;
+            color: #fff000;
+            font-size: 1.1rem;
+            padding: 10px;
+            margin: 15px 0;
+            border: 4px solid #000;
+        }
+        .nav {
+            background: #000;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .nav a {
+            color: #ffeb3b;
+            font-size: 1.1rem;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+        .nav a:hover {
+            color: #ff00ff;
+            background: #333;
+        }
+
+        .section {
+            border: 6px solid #000;
+            background: var(--section-bg);
+            padding: 18px;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #d50000;
+            margin-top: 5px;
+        }
+        .countdown {
+            font-size: 1.45rem;
+            font-weight: bold;
+            color: #d50000;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            border: 5px solid #000;
+            margin: 15px 0;
+        }
+        img.gallery {
+            width: 100%;
+            height: auto;
+            border: 5px solid #000;
+            margin: 12px 0;
+            display: block;
+        }
+        button {
+            background: var(--button-bg);
+            color: black;
+            font-size: 1.1rem;
+            padding: 14px 20px;
+            border: 5px solid #000;
+            cursor: pointer;
+            font-family: var(--main-font);
+            width: 100%;
+            margin: 8px 0;
+        }
+        button:hover {
+            background: #ffff00;
+        }
+
+        /* Switchers */
+        .switcher {
+            text-align: center;
+            margin: 10px 0 15px;
+            font-size: 0.9rem;
+        }
+        .switcher button {
+            width: auto;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            margin: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Switchers -->
+        <div class="switcher">
+            <strong>Font:</strong><br>
+            <button onclick="changeFont(1)">Comic Sans</button>
+            <button onclick="changeFont(2)">Impact</button>
+            <button onclick="changeFont(3)">Arial Black</button>
+            <button onclick="changeFont(4)">Papyrus</button>
+        </div>
+
+        <div class="switcher">
+            <strong>Colour Theme:</strong><br>
+            <button onclick="changeTheme(1)">Yellow Classic</button>
+            <button onclick="changeTheme(2)">Hot Pink</button>
+            <button onclick="changeTheme(3)">Lime Cyber</button>
+        </div>
+
+        <h1>💩 SHIT PUB SATURDAY 💩</h1>
+        
+        <marquee behavior="scroll" direction="left">
+            ★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★
+        </marquee>
+
+        <div class="nav">
+            <a href="#home">Home</a>
+            <a href="#upcoming">Next Event</a>
+            <a href="#halloffame">Hall of Fame</a>
+            <a href="#criteria">Criteria</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#membership">Join Us</a>
+        </div>
+
+        <!-- HOME -->
+        <div id="home" class="section">
+            <h2>Welcome to Shit Pub Saturday!</h2>
+            <p>The greatest day of the month where we go out and celebrate the <strong>best shit pubs</strong> — the ones owned and run by locals, for locals.</p>
+            <p>No pretentious crap. Just good beer, dodgy carpets, and excellent company.</p>
+        </div>
+
+        <!-- UPCOMING -->
+        <div id="upcoming" class="section">
+            <h2>Next Shit Pub Saturday</h2>
+            <p><strong>Date:</strong> Saturday 2nd May 2026<br>
+               <strong>Time:</strong> 12:30pm onwards<br>
+               <strong>Venue:</strong> Dandaloo Hotel</p>
+
+            <div class="countdown" id="countdown">Loading countdown...</div>
+
+            <button onclick="alert('See you at the Dandaloo Hotel, legend! Don\'t be late.')">
+                I'M IN - SEE YOU THERE
+            </button>
+        </div>
+
+        <!-- HALL OF FAME -->
+        <div id="halloffame" class="section">
+            <h2>🏆 Hall of Fame</h2>
+            <p><strong>Dicey Riley's Hotel</strong><br>
+            The undisputed champion so far. Absolute classic. 10/10 shit pub.</p>
+            <p>More legends coming soon...</p>
+        </div>
+
+        <!-- CRITERIA -->
+        <div id="criteria" class="section">
+            <h2>The Official Shit Pub Criteria</h2>
+            <ul>
+                <li>Locally owned and run by actual locals</li>
+                <li>Feels like the locals have been drinking there forever</li>
+                <li>Cheap drinks and no bullshit</li>
+                <li>Character > cleanliness</li>
+                <li>No smashed avocado or $18 cocktails</li>
+                <li>Good vibes only</li>
+            </ul>
+        </div>
+
+        <!-- GALLERY -->
+        <div id="gallery" class="section">
+            <h2>Shit Pub Saturday Gallery</h2>
+            <p>Some glorious moments from previous adventures:</p>
+            <img src="https://via.placeholder.com/600x400/ff9800/000?text=SHIT+PUB+1" class="gallery" alt="Shit Pub Photo">
+            <img src="https://via.placeholder.com/600x400/4caf50/000?text=SHIT+PUB+2" class="gallery" alt="Shit Pub Photo">
+            <img src="https://via.placeholder.com/600x400/e91e63/fff?text=SHIT+PUB+3" class="gallery" alt="Shit Pub Photo">
+        </div>
+
+        <!-- ABOUT -->
+        <div id="about" class="section">
+            <h2>About Shit Pub Saturday</h2>
+            <p>Every first Saturday of the month, a crew of mates gets together to find and enjoy proper "shit" pubs.</p>
+            <p>"Shit pub" is the highest compliment we can give — it means authentic, unpretentious, and full of character.</p>
+        </div>
+
+        <!-- MEMBERSHIP -->
+        <div id="membership" class="section">
+            <h2>Become a Member</h2>
+            <p>Congratulations! If you're here, you're probably already one of us.</p>
+            <ul>
+                <li>Must enjoy a good shit pub</li>
+                <li>Must not complain about the carpet</li>
+                <li>Must buy at least one round</li>
+                <li>Must have a good sense of humour</li>
+            </ul>
+            
+            <button onclick="alert('Welcome to the crew, legend! You are now officially a Shit Pub Saturday member.')">
+                SIGN ME UP
+            </button>
+        </div>
+
+        <p style="text-align:center; margin-top:30px; color:#444; font-size:0.95rem;">
+            Early 2000s Edition • First Saturday of every month
+        </p>
+    </div>
+
+    <script>
+        // ==================== FONT SWITCHER ====================
+        function changeFont(choice) {
+            const root = document.documentElement;
+            if (choice === 1) root.style.setProperty('--main-font', '"Comic Sans MS", cursive, sans-serif');
+            else if (choice === 2) root.style.setProperty('--main-font', 'Impact, Haettenschweiler, "Arial Black", sans-serif');
+            else if (choice === 3) root.style.setProperty('--main-font', '"Arial Black", Arial, sans-serif');
+            else if (choice === 4) root.style.setProperty('--main-font', 'Papyrus, fantasy');
+        }
+
+        // ==================== THEME SWITCHER ====================
+        function changeTheme(choice) {
+            const root = document.documentElement;
+            if (choice === 1) { // Yellow Classic
+                root.style.setProperty('--bg-start', '#ffeb3b');
+                root.style.setProperty('--bg-end', '#ff9800');
+                root.style.setProperty('--section-bg', '#fff176');
+                root.style.setProperty('--accent', '#e91e63');
+                root.style.setProperty('--button-bg', '#00e676');
+            } 
+            else if (choice === 2) { // Hot Pink / Purple
+                root.style.setProperty('--bg-start', '#ff00ff');
+                root.style.setProperty('--bg-end', '#9c27b0');
+                root.style.setProperty('--section-bg', '#f8bbd0');
+                root.style.setProperty('--accent', '#00ffff');
+                root.style.setProperty('--button-bg', '#ffff00');
+            } 
+            else if (choice === 3) { // Lime Cyber
+                root.style.setProperty('--bg-start', '#ccff00');
+                root.style.setProperty('--bg-end', '#00bcd4');
+                root.style.setProperty('--section-bg', '#e0f7fa');
+                root.style.setProperty('--accent', '#ff00ff');
+                root.style.setProperty('--button-bg', '#00ff00');
+            }
+        }
+
+        // ==================== COUNTDOWN ====================
+        function updateCountdown() {
+            const eventDate = new Date("May 2, 2026 12:30:00").getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "TODAY IS THE DAY! See you at the Dandaloo!";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s until next Shit Pub Saturday`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
