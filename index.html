@@ -29,23 +29,106 @@
             box-shadow: 6px 6px 0 #000;
             padding: 15px;
         }
-        h1 { font-size: 2.8rem; color: var(--accent); text-align: center; text-shadow: 3px 3px 0 #000; margin: 10px 0 8px; }
-        marquee { background: #000; color: #fff000; font-size: 1.1rem; padding: 10px; margin: 15px 0; border: 4px solid #000; }
-        .nav { background: #000; padding: 12px; margin: 15px 0; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-        .nav a { color: #ffeb3b; font-size: 1.05rem; text-decoration: none; padding: 10px 14px; border: 3px solid #ffeb3b; }
-        .nav a:hover { background: #ffeb3b; color: #000; }
-        .section { border: 6px solid #000; background: var(--section-bg); padding: 18px; margin: 20px 0; }
-        h2 { font-size: 1.8rem; color: #d50000; margin-top: 5px; }
-        .countdown { font-size: 1.45rem; font-weight: bold; color: #d50000; text-align: center; padding: 15px; background: #fff; border: 5px solid #000; margin: 15px 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 4px solid #000; padding: 10px; text-align: left; }
-        th { background: #000; color: #ffeb3b; }
-        input[type="text"] { width: 100%; padding: 12px; font-size: 1.1rem; border: 4px solid #000; font-family: var(--main-font); margin: 8px 0; }
-        button { background: var(--button-bg); color: black; font-size: 1.1rem; padding: 14px 20px; border: 5px solid #000; cursor: pointer; font-family: var(--main-font); width: 100%; margin: 8px 0; }
+        h1 {
+            font-size: 2.8rem;
+            color: var(--accent);
+            text-align: center;
+            text-shadow: 3px 3px 0 #000;
+            margin: 10px 0 8px;
+        }
+        marquee {
+            background: #000;
+            color: #fff000;
+            font-size: 1.1rem;
+            padding: 10px;
+            margin: 15px 0;
+            border: 4px solid #000;
+        }
+        .nav {
+            background: #000;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+        .nav a {
+            color: #ffeb3b;
+            font-size: 1.05rem;
+            text-decoration: none;
+            padding: 10px 14px;
+            border: 3px solid #ffeb3b;
+        }
+        .nav a:hover {
+            background: #ffeb3b;
+            color: #000;
+        }
+        .section {
+            border: 6px solid #000;
+            background: var(--section-bg);
+            padding: 18px;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #d50000;
+            margin-top: 5px;
+        }
+        .countdown {
+            font-size: 1.45rem;
+            font-weight: bold;
+            color: #d50000;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            border: 5px solid #000;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 4px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #000;
+            color: #ffeb3b;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 4px solid #000;
+            font-family: var(--main-font);
+            margin: 8px 0;
+        }
+        button {
+            background: var(--button-bg);
+            color: black;
+            font-size: 1.1rem;
+            padding: 14px 20px;
+            border: 5px solid #000;
+            cursor: pointer;
+            font-family: var(--main-font);
+            width: 100%;
+            margin: 8px 0;
+        }
         button:hover { background: #ffff00; }
         .admin-btn { background: #ff4444; color: white; font-size: 0.95rem; }
         .hint { background: #fff3e0; border: 4px dashed #ff9800; padding: 12px; text-align: center; margin: 15px 0; }
-        .status { padding: 10px; margin: 10px 0; border: 3px solid #000; font-size: 0.95rem; }
+        .status {
+            padding: 12px;
+            margin: 10px 0;
+            border: 3px solid #000;
+            font-size: 0.95rem;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -53,7 +136,9 @@
         <div class="hint">👉 Best viewed in Safari • If weird, save to Files and open in Safari</div>
 
         <h1>💩 SHIT PUB SATURDAY 💩</h1>
-        <marquee behavior="scroll" direction="left">★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★</marquee>
+        <marquee behavior="scroll" direction="left">
+            ★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★
+        </marquee>
 
         <div class="nav">
             <a href="index.html">Home</a>
@@ -66,6 +151,7 @@
             <a href="#membership">Join Us</a>
         </div>
 
+        <!-- NEXT EVENT -->
         <div id="upcoming" class="section">
             <h2>Next Shit Pub Saturday</h2>
             <p><strong>Date:</strong> Saturday 2nd May 2026<br>
@@ -83,11 +169,16 @@
             <input type="text" id="yourName" placeholder="Your name">
             <button onclick="submitRecommendation()">Submit Recommendation</button>
 
-            <div id="statusMessage" class="status" style="display:none;"></div>
+            <div id="statusMessage" class="status"></div>
 
             <h3>Venue Recommendations (Local)</h3>
             <table id="recommendationsTable">
-                <thead><tr><th>Pub Name</th><th>Recommended By</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Pub Name</th>
+                        <th>Recommended By</th>
+                    </tr>
+                </thead>
                 <tbody id="recommendationsBody"></tbody>
             </table>
 
@@ -120,7 +211,7 @@
             <p>"Shit pub" is the highest compliment we can give.</p>
         </div>
 
-        <!-- Meet the Club Board -->
+        <!-- CLUB BOARD -->
         <div id="board" class="section">
             <h2>Meet The Club Board</h2>
             <p>Founder/Club President - <strong>Emery</strong></p>
@@ -142,17 +233,16 @@
             <button onclick="alert('Welcome to the crew, legend!')">SIGN ME UP</button>
         </div>
 
-        <p style="text-align:center; margin-top:30px; color:#444;">
+        <p style="text-align:center; margin-top:40px; color:#444;">
             Early 2000s Edition • First Saturday of every month
         </p>
     </div>
 
-
     <script>
-        // ==================== CHANGE THIS TO YOUR ACTUAL URL ====================
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLrS1NOhokD1OsqtxTQo7cPrGX_yDS6ABG2vFU772PXaTjzjEG5tdQFY1XqQJR0sJbSg/exec";
+        // ==================== PUT YOUR GOOGLE SCRIPT URL HERE ====================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_ACTUAL_URL_HERE/exec";
 
-        // Countdown Timer
+        // Countdown
         function updateCountdown() {
             const eventDate = new Date("May 2, 2026 12:30:00").getTime();
             const distance = eventDate - Date.now();
@@ -189,7 +279,7 @@
             });
         }
 
-        // Improved Submit Function with better error messages
+        // Submit Recommendation with better error handling
         async function submitRecommendation() {
             const pub = document.getElementById('pubName').value.trim();
             const name = document.getElementById('yourName').value.trim();
@@ -200,7 +290,7 @@
                 return;
             }
 
-            // Add to local view immediately
+            // Add locally first
             recommendations.unshift({ pub: pub, name: name });
             saveRecommendations();
             renderTable();
@@ -209,57 +299,45 @@
             statusEl.style.background = "#fff176";
             statusEl.textContent = "Sending to Google Sheet...";
 
-            // Try to send to Google Sheet
             try {
                 const formData = new FormData();
                 formData.append("pubName", pub);
                 formData.append("recommendedBy", name);
 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
-                    body: formData,
-                    mode: "no-cors"   // Helps with some CORS issues
+                    body: formData
                 });
 
-                // With no-cors we can't read response, so we assume success if no error thrown
                 statusEl.style.background = "#c8e6c9";
                 statusEl.textContent = "✅ Successfully saved to Google Sheet!";
                 
-                setTimeout(() => {
-                    statusEl.style.display = "none";
-                }, 4000);
-
-                alert("Recommendation saved to both local view and Google Sheet!");
+                setTimeout(() => statusEl.style.display = "none", 5000);
 
             } catch (err) {
-                console.error("Google Sheet Error:", err);
+                console.error(err);
                 statusEl.style.background = "#ffcdd2";
-                statusEl.textContent = "❌ Failed to save to Google Sheet. Saved locally only.";
-                
-                alert("Saved locally only.\n\nGoogle Sheet connection failed.\n\nPossible fixes:\n1. Make sure you redeployed the Web App\n2. Check that the URL is correct\n3. Try redeploying with 'Anyone' access");
+                statusEl.textContent = "❌ Could not save to Google Sheet (saved locally only). Check your Apps Script URL and redeploy.";
             }
 
-            // Clear inputs
             document.getElementById('pubName').value = '';
             document.getElementById('yourName').value = '';
         }
 
-        // Admin Clear Function
         function clearAllData() {
-            const password = prompt("Enter Admin Password to clear all recommendations:");
+            const password = prompt("Enter Admin Password:");
             if (password === "emery2026") {
-                if (confirm("Are you sure you want to delete ALL recommendations?")) {
+                if (confirm("Delete ALL recommendations?")) {
                     localStorage.removeItem('shitPubRecommendations');
                     recommendations = [];
                     renderTable();
-                    alert("All local recommendations have been cleared.");
+                    alert("All recommendations cleared.");
                 }
             } else {
                 alert("Incorrect password.");
             }
         }
 
-        // Load recommendations on page load
         window.onload = loadRecommendations;
     </script>
 </body>
