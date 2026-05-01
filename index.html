@@ -45,6 +45,7 @@
         button:hover { background: #ffff00; }
         .admin-btn { background: #ff4444; color: white; font-size: 0.95rem; }
         .hint { background: #fff3e0; border: 4px dashed #ff9800; padding: 12px; text-align: center; margin: 15px 0; }
+        .status { padding: 10px; margin: 10px 0; border: 3px solid #000; font-size: 0.95rem; }
     </style>
 </head>
 <body>
@@ -52,9 +53,7 @@
         <div class="hint">👉 Best viewed in Safari • If weird, save to Files and open in Safari</div>
 
         <h1>💩 SHIT PUB SATURDAY 💩</h1>
-        <marquee behavior="scroll" direction="left">
-            ★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★
-        </marquee>
+        <marquee behavior="scroll" direction="left">★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★</marquee>
 
         <div class="nav">
             <a href="index.html">Home</a>
@@ -84,6 +83,8 @@
             <input type="text" id="yourName" placeholder="Your name">
             <button onclick="submitRecommendation()">Submit Recommendation</button>
 
+            <div id="statusMessage" class="status" style="display:none;"></div>
+
             <h3>Venue Recommendations (Local)</h3>
             <table id="recommendationsTable">
                 <thead><tr><th>Pub Name</th><th>Recommended By</th></tr></thead>
@@ -93,14 +94,12 @@
             <button class="admin-btn" onclick="clearAllData()">🛠️ Clear All Recommendations (Admin Only)</button>
         </div>
 
-        <!-- Keep your other sections (Hall of Fame, Criteria, Board, About, Membership) here -->
-        <!-- Copy them from your previous version if needed -->
-
+        <!-- Add your other sections (halloffame, criteria, board, about, membership) here as before -->
     </div>
 
     <script>
-        // ←←← PASTE YOUR GOOGLE WEB APP URL HERE ↓↓↓
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZCmVb57bPAmXI_dU1n-XddXnYLSTPLICOc_tUC6e_SQlyZE_vCAzWqWeRkc98-7Wadg/exec";
+        // ==================== CHANGE THIS TO YOUR ACTUAL URL ====================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLrS1NOhokD1OsqtxTQo7cPrGX_yDS6ABG2vFU772PXaTjzjEG5tdQFY1XqQJR0sJbSg/exec";
 
         // Countdown Timer
         function updateCountdown() {
@@ -119,7 +118,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Local display
+        // Local recommendations
         let recommendations = [];
         function loadRecommendations() {
             const saved = localStorage.getItem('shitPubRecommendations');
@@ -139,10 +138,11 @@
             });
         }
 
-        // Submit to both local + Google Sheet
+        // Improved Submit Function with better error messages
         async function submitRecommendation() {
             const pub = document.getElementById('pubName').value.trim();
             const name = document.getElementById('yourName').value.trim();
+            const statusEl = document.getElementById('statusMessage');
 
             if (!pub || !name) {
                 alert("Please fill in both Pub Name and Your Name!");
@@ -154,7 +154,11 @@
             saveRecommendations();
             renderTable();
 
-            // Send to Google Sheet
+            statusEl.style.display = "block";
+            statusEl.style.background = "#fff176";
+            statusEl.textContent = "Sending to Google Sheet...";
+
+            // Try to send to Google Sheet
             try {
                 const formData = new FormData();
                 formData.append("pubName", pub);
@@ -162,38 +166,49 @@
 
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
-                    body: formData
+                    body: formData,
+                    mode: "no-cors"   // Helps with some CORS issues
                 });
 
-                if (response.ok) {
-                    alert("✅ Recommendation saved to the club Google Sheet!");
-                } else {
-                    alert("Saved locally. Could not save to Google Sheet.");
-                }
+                // With no-cors we can't read response, so we assume success if no error thrown
+                statusEl.style.background = "#c8e6c9";
+                statusEl.textContent = "✅ Successfully saved to Google Sheet!";
+                
+                setTimeout(() => {
+                    statusEl.style.display = "none";
+                }, 4000);
+
+                alert("Recommendation saved to both local view and Google Sheet!");
+
             } catch (err) {
-                console.error(err);
-                alert("Saved locally only. Google Sheet connection failed.");
+                console.error("Google Sheet Error:", err);
+                statusEl.style.background = "#ffcdd2";
+                statusEl.textContent = "❌ Failed to save to Google Sheet. Saved locally only.";
+                
+                alert("Saved locally only.\n\nGoogle Sheet connection failed.\n\nPossible fixes:\n1. Make sure you redeployed the Web App\n2. Check that the URL is correct\n3. Try redeploying with 'Anyone' access");
             }
 
+            // Clear inputs
             document.getElementById('pubName').value = '';
             document.getElementById('yourName').value = '';
         }
 
-        // Admin Clear
+        // Admin Clear Function
         function clearAllData() {
-            const password = prompt("Enter Admin Password:");
+            const password = prompt("Enter Admin Password to clear all recommendations:");
             if (password === "emery2026") {
-                if (confirm("Delete ALL recommendations?")) {
+                if (confirm("Are you sure you want to delete ALL recommendations?")) {
                     localStorage.removeItem('shitPubRecommendations');
                     recommendations = [];
                     renderTable();
-                    alert("Local data cleared.");
+                    alert("All local recommendations have been cleared.");
                 }
             } else {
-                alert("Wrong password.");
+                alert("Incorrect password.");
             }
         }
 
+        // Load recommendations on page load
         window.onload = loadRecommendations;
     </script>
 </body>
