@@ -137,6 +137,21 @@
         <marquee behavior="scroll" direction="left">
             ★ First Saturday of Every Month ★ Locals Only ★ Proper Shit Pubs ★ No Wankers ★
         </marquee>
+        <!-- Switchers -->
+        <div class="switcher">
+            <strong>Font:</strong><br>
+            <button onclick="changeFont(1)">Comic Sans</button>
+            <button onclick="changeFont(2)">Impact</button>
+            <button onclick="changeFont(3)">Arial Black</button>
+            <button onclick="changeFont(4)">Papyrus</button>
+        </div>
+
+        <div class="switcher">
+            <strong>Colour Theme:</strong><br>
+            <button onclick="changeTheme(1)">Yellow Classic</button>
+            <button onclick="changeTheme(2)">Hot Pink</button>
+            <button onclick="changeTheme(3)">Lime Cyber</button>
+        </div>
 
         <div class="nav">
             <a href="index.html">Home</a>
@@ -337,6 +352,44 @@
         }
 
         window.onload = loadRecommendations;
+    </script>
+
+
+    <script>
+        // Font Switcher
+        function changeFont(choice) {
+            const root = document.documentElement;
+            if (choice === 1) root.style.setProperty('--main-font', '"Comic Sans MS", cursive, sans-serif');
+            else if (choice === 2) root.style.setProperty('--main-font', 'Impact, Haettenschweiler, "Arial Black", sans-serif');
+            else if (choice === 3) root.style.setProperty('--main-font', '"Arial Black", Arial, sans-serif');
+            else if (choice === 4) root.style.setProperty('--main-font', 'Papyrus, fantasy');
+        }
+
+        // Theme Switcher
+        function changeTheme(choice) {
+            const root = document.documentElement;
+            if (choice === 1) { // Yellow Classic
+                root.style.setProperty('--bg-start', '#ffeb3b');
+                root.style.setProperty('--bg-end', '#ff9800');
+                root.style.setProperty('--section-bg', '#fff176');
+                root.style.setProperty('--accent', '#e91e63');
+                root.style.setProperty('--button-bg', '#00e676');
+            } 
+            else if (choice === 2) { // Hot Pink
+                root.style.setProperty('--bg-start', '#ff00ff');
+                root.style.setProperty('--bg-end', '#9c27b0');
+                root.style.setProperty('--section-bg', '#f8bbd0');
+                root.style.setProperty('--accent', '#00ffff');
+                root.style.setProperty('--button-bg', '#ffff00');
+            } 
+            else if (choice === 3) { // Lime Cyber
+                root.style.setProperty('--bg-start', '#ccff00');
+                root.style.setProperty('--bg-end', '#00bcd4');
+                root.style.setProperty('--section-bg', '#e0f7fa');
+                root.style.setProperty('--accent', '#ff00ff');
+                root.style.setProperty('--button-bg', '#00ff00');
+            }
+        }
     </script>
 </body>
 </html>
