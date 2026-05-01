@@ -13,7 +13,6 @@
             --accent: #e91e63;
             --button-bg: #00e676;
         }
-
         body {
             background: linear-gradient(var(--bg-start), var(--bg-end));
             font-family: var(--main-font);
@@ -66,7 +65,6 @@
             background: #ffeb3b;
             color: #000;
         }
-
         .section {
             border: 6px solid #000;
             background: var(--section-bg);
@@ -85,7 +83,7 @@
             margin: 15px 0;
             display: block;
         }
-        button, .back-btn {
+        .back-btn {
             background: var(--button-bg);
             color: black;
             font-size: 1.1rem;
@@ -94,27 +92,14 @@
             cursor: pointer;
             font-family: var(--main-font);
             width: 100%;
-            margin: 10px 0;
+            margin: 20px 0;
             text-align: center;
             display: inline-block;
             text-decoration: none;
         }
-        button:hover, .back-btn:hover {
+        .back-btn:hover {
             background: #ffff00;
         }
-
-        .switcher {
-            text-align: center;
-            margin: 10px 0 15px;
-            font-size: 0.9rem;
-        }
-        .switcher button {
-            width: auto;
-            padding: 8px 14px;
-            font-size: 0.85rem;
-            margin: 4px;
-        }
-
         .hint {
             background: #fff3e0;
             border: 4px dashed #ff9800;
@@ -127,94 +112,43 @@
 <body>
     <div class="container">
 
-        <!-- Switchers -->
-        <div class="switcher">
-            <strong>Font:</strong><br>
-            <button onclick="changeFont(1)">Comic Sans</button>
-            <button onclick="changeFont(2)">Impact</button>
-            <button onclick="changeFont(3)">Arial Black</button>
-            <button onclick="changeFont(4)">Papyrus</button>
-        </div>
-
-        <div class="switcher">
-            <strong>Colour Theme:</strong><br>
-            <button onclick="changeTheme(1)">Yellow Classic</button>
-            <button onclick="changeTheme(2)">Hot Pink</button>
-            <button onclick="changeTheme(3)">Lime Cyber</button>
-        </div>
-
         <h1>📸 SHIT PUB GALLERY 📸</h1>
-
+        
         <marquee behavior="scroll" direction="left">
             ★ Best Shit Pub Moments ★ First Saturday of Every Month ★
         </marquee>
 
         <div class="nav">
             <a href="index.html">Home</a>
-            <a href="#">Next Event</a>
-            <a href="#">Hall of Fame</a>
-            <a href="#">Criteria</a>
+            <a href="index.html#upcoming">Next Event</a>
+            <a href="index.html#halloffame">Hall of Fame</a>
+            <a href="index.html#criteria">Criteria</a>
             <a href="gallery.html">Gallery</a>
-            <a href="#">About</a>
-            <a href="#">Join Us</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#board">Board</a>
+            <a href="index.html#membership">Join Us</a>
         </div>
 
         <div class="section">
             <h2>Shit Pub Saturday Gallery</h2>
             <p>Some glorious moments from our previous adventures:</p>
             
-            <!-- Replace these with your real photo filenames -->
-            <img src="photo1.jpg" class="gallery" alt="Shit Pub Saturday 1">
-            <img src="photo2.jpg" class="gallery" alt="Shit Pub Saturday 2">
+            <!-- Placeholder images - Replace these with your real photos -->
+            <img src="headslags.jpg" class="gallery" alt="Shit Pub Saturday 1">
+            <img src="presidentandVP.jpg" class="gallery" alt="Shit Pub Saturday 2">
             <img src="photo3.jpg" class="gallery" alt="Shit Pub Saturday 3">
             <img src="photo4.jpg" class="gallery" alt="Shit Pub Saturday 4">
-            
-            <p><em>Pro tip: Replace photo1.jpg, photo2.jpg etc. with your actual photos.</em></p>
+            <img src="photo5.jpg" class="gallery" alt="Shit Pub Saturday 5">
+
+            <p><strong>Pro tip:</strong> Replace <code>photo1.jpg</code>, <code>photo2.jpg</code>, etc. with your actual photo filenames.</p>
+            <p>Upload your real photos to the same folder as this file on GitHub.</p>
         </div>
 
-        <!-- Back to Home Button -->
         <a href="index.html" class="back-btn">← Back to Main Page</a>
 
         <div class="hint">
-            👉 Best viewed in Safari. If it looks weird, try "Open in Safari"
+            👉 Best viewed in Safari. If it looks weird, save to Files and open in Safari.
         </div>
     </div>
-
-    <script>
-        // Font Switcher
-        function changeFont(choice) {
-            const root = document.documentElement;
-            if (choice === 1) root.style.setProperty('--main-font', '"Comic Sans MS", cursive, sans-serif');
-            else if (choice === 2) root.style.setProperty('--main-font', 'Impact, Haettenschweiler, "Arial Black", sans-serif');
-            else if (choice === 3) root.style.setProperty('--main-font', '"Arial Black", Arial, sans-serif');
-            else if (choice === 4) root.style.setProperty('--main-font', 'Papyrus, fantasy');
-        }
-
-        // Theme Switcher
-        function changeTheme(choice) {
-            const root = document.documentElement;
-            if (choice === 1) { // Yellow Classic
-                root.style.setProperty('--bg-start', '#ffeb3b');
-                root.style.setProperty('--bg-end', '#ff9800');
-                root.style.setProperty('--section-bg', '#fff176');
-                root.style.setProperty('--accent', '#e91e63');
-                root.style.setProperty('--button-bg', '#00e676');
-            } 
-            else if (choice === 2) { // Hot Pink
-                root.style.setProperty('--bg-start', '#ff00ff');
-                root.style.setProperty('--bg-end', '#9c27b0');
-                root.style.setProperty('--section-bg', '#f8bbd0');
-                root.style.setProperty('--accent', '#00ffff');
-                root.style.setProperty('--button-bg', '#ffff00');
-            } 
-            else if (choice === 3) { // Lime Cyber
-                root.style.setProperty('--bg-start', '#ccff00');
-                root.style.setProperty('--bg-end', '#00bcd4');
-                root.style.setProperty('--section-bg', '#e0f7fa');
-                root.style.setProperty('--accent', '#ff00ff');
-                root.style.setProperty('--button-bg', '#00ff00');
-            }
-        }
-    </script>
 </body>
 </html>
