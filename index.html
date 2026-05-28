@@ -6,7 +6,7 @@
     <title>Shit Pub Saturday</title>
     <style>
         :root {
-            --main-font: 'Papyrus, fantasy';
+            --main-font: 'Papyrus', fantasy, sans-serif;
             --bg-start: #ffeb3b;
             --bg-end: #ff9800;
             --section-bg: #fff176;
@@ -107,6 +107,7 @@
             border: 4px solid #000;
             font-family: var(--main-font);
             margin: 8px 0;
+            box-sizing: border-box;
         }
         button {
             background: var(--button-bg);
@@ -121,19 +122,20 @@
         }
         button:hover { background: #ffff00; }
         .admin-btn { background: #ff4444; color: white; font-size: 0.95rem; }
-        .hint { background: #fff3e0; border: 4px dashed #ff9800; padding: 12px; text-align: center; margin: 15px 0; }
         .status {
             padding: 12px;
             margin: 10px 0;
             border: 3px solid #000;
             font-size: 0.95rem;
             display: none;
+            color: black;
         }
         /* Switchers */
         .switcher {
             text-align: center;
             margin: 10px 0 15px;
             font-size: 0.9rem;
+            color: #fff; /* Improved readability over the blue background */
         }
         .switcher button {
             width: auto;
@@ -142,12 +144,79 @@
             margin: 4px;
         }
     </style>
+    <style>
+    .pub-picker-container {
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: center;
+        background: var(--section-bg);
+        border: 6px solid #000;
+        padding: 15px;
+    }
+    .inputs-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    .pub-input {
+        width: 100%;
+        padding: 10px;
+        border: 4px solid #000 !important;
+        border-radius: 0px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .wheel-outer {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+    }
+    .wheel-outer::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 20px solid #ff4757;
+        z-index: 10;
+    }
+    #wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 5px solid #000;
+        box-sizing: border-box;
+        transition: transform 4s cubic-bezier(0.1, 0.8, 0.25, 1);
+    }
+    .spin-btn {
+        background: #ff4757;
+        color: white;
+        border: 5px solid #000;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+    }
+    .spin-btn:disabled { background: #999; }
+    #result {
+        margin-top: 15px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        min-height: 30px;
+        color: #000;
+    }
+    </style>
 </head>
 <body>
     <div class="container">
 
-
-        <!-- Switchers -->
         <div class="switcher">
             <strong>Font:</strong><br>
             <button onclick="changeFont(1)">Comic Sans</button>
@@ -180,7 +249,25 @@
             <a href="#membership">Join Us</a>
         </div>
 
-        <!-- NEXT EVENT -->
+        <div class="pub-picker-container">
+            <h2>🎯 The Venue Roulette</h2>
+            <div class="inputs-grid">
+                <input type="text" class="pub-input" value="The Red Lion" placeholder="Pub 1">
+                <input type="text" class="pub-input" value="The Crown" placeholder="Pub 2">
+                <input type="text" class="pub-input" value="Royal Oak" placeholder="Pub 3">
+                <input type="text" class="pub-input" value="The White Hart" placeholder="Pub 4">
+                <input type="text" class="pub-input" value="The Swan" placeholder="Pub 5">
+            </div>
+
+            <button class="spin-btn" id="spinButton" onclick="spinWheel()">Spin the Wheel!</button>
+
+            <div class="wheel-outer">
+                <canvas id="wheel" width="400" height="400"></canvas>
+            </div>
+
+            <div id="result"></div>
+        </div>
+
         <div id="upcoming" class="section">
             <h2>Next Shit Pub Saturday</h2>
             <p><strong>Date:</strong> Saturday 2nd May 2026<br>
@@ -214,7 +301,6 @@
             <button class="admin-btn" onclick="clearAllData()">🛠️ Clear All Recommendations (Admin Only)</button>
         </div>
 
-        <!-- HALL OF FAME -->
         <div id="halloffame" class="section">
             <h2>🏆 Hall of Fame</h2>
             <p><strong>Dicey Riley's Hotel</strong><br>
@@ -223,7 +309,6 @@
             On the 1st Saturday of March 2026, the 4 club founders took the bus from Crown Street all the way to Brownsville/Dapto. A great day was had all round, solidifying this SPUB as one that will be hard to beat.</p>
         </div>
 
-        <!-- CRITERIA -->
         <div id="criteria" class="section">
             <h2>The Official Shit Pub Criteria</h2>
             <ul>
@@ -235,14 +320,12 @@
             </ul>
         </div>
 
-        <!-- ABOUT -->
         <div id="about" class="section">
             <h2>About Shit Pub Saturday</h2>
             <p>Every first Saturday of the month, a crew of mates gets together to find and enjoy proper "shit" pubs.</p>
             <p>"Shit pub" is the highest compliment we can give.</p>
         </div>
 
-        <!-- CLUB BOARD -->
         <div id="board" class="section">
             <h2>Meet The Club Board</h2>
             <p>Founder/Club President - <strong>Emery</strong></p>
@@ -251,7 +334,6 @@
             <p>Club Sexcretary - <strong>Katie the Rat</strong></p>
         </div>
 
-        <!-- MEMBERSHIP -->
         <div id="membership" class="section">
             <h2>Become a Member</h2>
             <p>If you're here, you're probably already one of us.</p>
@@ -264,13 +346,10 @@
             <button onclick="alert('Welcome to the crew, legend!')">SIGN ME UP</button>
         </div>
 
-        <p style="text-align:center; margin-top:40px; color:#444;">
+        <p style="text-align:center; margin-top:40px; color:#fff;">
             Early 2000s Edition • First Saturday of every month
         </p>
-    </div>
-
-    <script>
-        // ==================== PUT YOUR GOOGLE SCRIPT URL HERE ====================
+    </div> <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLrS1NOhokD1OsqtxTQo7cPrGX_yDS6ABG2vFU772PXaTjzjEG5tdQFY1XqQJR0sJbSg/exec";
 
         // Countdown
@@ -310,7 +389,7 @@
             });
         }
 
-        // Submit Recommendation with better error handling
+        // Submit Recommendation Payload Fixed
         async function submitRecommendation() {
             const pub = document.getElementById('pubName').value.trim();
             const name = document.getElementById('yourName').value.trim();
@@ -321,7 +400,6 @@
                 return;
             }
 
-            // Add locally first
             recommendations.unshift({ pub: pub, name: name });
             saveRecommendations();
             renderTable();
@@ -331,18 +409,22 @@
             statusEl.textContent = "Sending to Google Sheet...";
 
             try {
-                const formData = new FormData();
-                formData.append("pubName", pub);
-                formData.append("recommendedBy", name);
+                // Using URLSearchParams standard parsing instead of standard multipart FormData payloads
+                // helps bypass basic cross-origin content-type blocks common with script macros
+                const payload = new URLSearchParams();
+                payload.append("pubName", pub);
+                payload.append("recommendedBy", name);
 
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
-                    body: formData
+                    body: payload,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
                 });
 
                 statusEl.style.background = "#c8e6c9";
                 statusEl.textContent = "✅ Successfully saved to Google Sheet!";
-                
                 setTimeout(() => statusEl.style.display = "none", 5000);
 
             } catch (err) {
@@ -372,42 +454,118 @@
         window.onload = loadRecommendations;
     </script>
 
-
     <script>
-        // Font Switcher
+        // Global string trackers for rendering typography accurately onto the HTML5 Canvas
+        let activeCanvasFont = "Papyrus, fantasy";
+
         function changeFont(choice) {
             const root = document.documentElement;
-            if (choice === 1) root.style.setProperty('--main-font', '"Comic Sans MS", cursive, sans-serif');
-            else if (choice === 2) root.style.setProperty('--main-font', 'Impact, Haettenschweiler, "Arial Black", sans-serif');
-            else if (choice === 3) root.style.setProperty('--main-font', '"Arial Black", Arial, sans-serif');
-            else if (choice === 4) root.style.setProperty('--main-font', 'Papyrus, fantasy');
+            if (choice === 1) {
+                activeCanvasFont = '"Comic Sans MS", cursive, sans-serif';
+            } else if (choice === 2) {
+                activeCanvasFont = 'Impact, sans-serif';
+            } else if (choice === 3) {
+                activeCanvasFont = '"Arial Black", sans-serif';
+            } else if (choice === 4) {
+                activeCanvasFont = 'Papyrus, fantasy';
+            }
+            root.style.setProperty('--main-font', activeCanvasFont);
+            drawWheel(); // Force canvas redraw to apply typography updates dynamically
         }
 
-        // Theme Switcher
         function changeTheme(choice) {
             const root = document.documentElement;
-            if (choice === 1) { // Yellow Classic
+            if (choice === 1) {
                 root.style.setProperty('--bg-start', '#ffeb3b');
                 root.style.setProperty('--bg-end', '#ff9800');
                 root.style.setProperty('--section-bg', '#fff176');
                 root.style.setProperty('--accent', '#e91e63');
                 root.style.setProperty('--button-bg', '#00e676');
             } 
-            else if (choice === 2) { // Hot Pink
+            else if (choice === 2) {
                 root.style.setProperty('--bg-start', '#ff00ff');
                 root.style.setProperty('--bg-end', '#9c27b0');
                 root.style.setProperty('--section-bg', '#f8bbd0');
                 root.style.setProperty('--accent', '#00ffff');
                 root.style.setProperty('--button-bg', '#ffff00');
             } 
-            else if (choice === 3) { // Lime Cyber
+            else if (choice === 3) {
                 root.style.setProperty('--bg-start', '#ccff00');
                 root.style.setProperty('--bg-end', '#00bcd4');
                 root.style.setProperty('--section-bg', '#e0f7fa');
                 root.style.setProperty('--accent', '#ff00ff');
                 root.style.setProperty('--button-bg', '#00ff00');
             }
+            drawWheel();
         }
+    </script>
+    <script>
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const spinButton = document.getElementById('spinButton');
+    const resultDiv = document.getElementById('result');
+    const colors = ['#f1c40f', '#e67e22', '#e74c3c', '#9b59b6', '#3498db'];
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    function getPubNames() {
+        return Array.from(document.querySelectorAll('.pub-input')).map(i => i.value.trim() || i.placeholder);
+    }
+
+    function drawWheel() {
+        const pubs = getPubNames();
+        const numSegments = pubs.length;
+        const anglePerSegment = (2 * Math.PI) / numSegments;
+        const radius = canvas.width / 2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < numSegments; i++) {
+            ctx.beginPath();
+            ctx.moveTo(radius, radius);
+            ctx.arc(radius, radius, radius, i * anglePerSegment, (i + 1) * anglePerSegment);
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.fill();
+
+            // Outline strokes to maintain the early-web style guidelines
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(radius, radius);
+            ctx.rotate(i * anglePerSegment + anglePerSegment / 2);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#ffffff";
+            
+            // Dynamic canvas variable replacement injects the chosen style switcher font
+            ctx.font = `bold 16px ${activeCanvasFont}`;
+            
+            ctx.fillText(pubs[i].length > 15 ? pubs[i].substring(0, 13) + '...' : pubs[i], radius - 25, 6);
+            ctx.restore();
+        }
+    }
+
+    function spinWheel() {
+        if (isSpinning) return;
+        isSpinning = true;
+        spinButton.disabled = true;
+        resultDiv.innerText = "🎰 Selecting Venue...";
+
+        const pubs = getPubNames();
+        currentRotation += ((4 + Math.floor(Math.random() * 5)) * 360) + Math.floor(Math.random() * 360);
+        canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+        setTimeout(() => {
+            isSpinning = false;
+            spinButton.disabled = false;
+            const adjustedDegrees = ((360 - (currentRotation % 360)) % 360 + 90) % 360;
+            const segmentIndex = Math.floor(adjustedDegrees / (360 / pubs.length)) % pubs.length;
+            resultDiv.innerText = `🎉 Winner: ${pubs[segmentIndex]}! 🍻`;
+        }, 4000);
+    }
+
+    drawWheel();
+    document.querySelectorAll('.pub-input').forEach(input => input.addEventListener('input', drawWheel));
     </script>
 </body>
 </html>
