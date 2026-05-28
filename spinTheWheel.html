@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍺 Pub Draw Wheel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #1a0a00;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #fff;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    color: #f5c842;
+    text-shadow: 0 2px 8px rgba(245,200,66,0.4);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .subtitle { color: #c8a96e; margin-bottom: 30px; font-size: 1rem; }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* ---- Input panel ---- */
+  .input-panel {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+  }
+
+  .input-panel h2 { color: #f5c842; font-size: 1rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .pub-inputs { display: flex; flex-direction: column; gap: 10px; }
+  .pub-row { display: flex; align-items: center; gap: 10px; }
+
+  .pub-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 0.85rem; flex-shrink: 0;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, opacity 0.2s;
+  }
+  input[type="text"]:focus { border-color: #f5c842; background: rgba(255,255,255,0.12); }
+  input[type="text"]::placeholder { color: rgba(255,255,255,0.3); }
+  input[type="text"].inactive { opacity: 0.35; }
+  input[type="text"]:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .entry-count { color: #c8a96e; font-size: 0.85rem; margin-top: 6px; margin-bottom: 2px; min-height: 18px; }
+  .warn { color: #f4a261; font-size: 0.85rem; margin-top: 8px; min-height: 18px; }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+
+  .spin-btn, .record-btn, .reset-btn {
+    flex: 1; padding: 14px; border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 800; cursor: pointer;
+    letter-spacing: 0.5px; transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .spin-btn {
+    background: linear-gradient(135deg, #f5c842, #e8a020);
+    color: #1a0a00; box-shadow: 0 4px 20px rgba(245,200,66,0.3);
+  }
+  .spin-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245,200,66,0.5); }
+
+  .record-btn {
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    color: #fff; box-shadow: 0 4px 20px rgba(230,57,70,0.3);
+  }
+  .record-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(230,57,70,0.5); }
+
+  .reset-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #c8a96e;
+    display: none;
+  }
+  .reset-btn:hover { background: rgba(255,255,255,0.14); }
+
+  .spin-btn:active:not(:disabled),
+  .record-btn:active:not(:disabled),
+  .reset-btn:active { transform: translateY(0); }
+  .spin-btn:disabled, .record-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* ---- Status bar ---- */
+  .status-bar {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(245,200,66,0.15);
+    border-radius: 10px; padding: 10px 16px;
+    font-size: 0.9rem; color: #c8a96e; text-align: center; display: none;
+  }
+  .status-bar.active { display: block; }
+  .status-bar.recording { color: #ff6b6b; border-color: rgba(230,57,70,0.4); }
+  .status-bar.done { color: #69db7c; border-color: rgba(105,219,124,0.4); }
+
+  /* ---- Elimination log ---- */
+  .elim-log {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(245,200,66,0.15);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: none;
+  }
+  .elim-log h3 { color: #f5c842; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .elim-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .elim-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.9rem; color: rgba(255,255,255,0.6);
+  }
+  .elim-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .elim-round { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-left: auto; }
+
+  /* ---- Wheel ---- */
+  .wheel-section {
+    position: relative; display: flex;
+    flex-direction: column; align-items: center; gap: 20px;
+  }
+  .wheel-wrapper { position: relative; width: 340px; height: 340px; }
+
+  .pointer {
+    position: absolute; top: -14px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 28px solid #f5c842;
+    filter: drop-shadow(0 2px 6px rgba(245,200,66,0.8));
+    z-index: 10;
+  }
+
+  canvas {
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(245,200,66,0.2), 0 0 0 4px rgba(245,200,66,0.3);
+    display: block;
+  }
+  #recordCanvas { display: none; }
+
+  .hub {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px;
+    background: radial-gradient(circle, #fff 30%, #c8a96e 100%);
+    border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 5;
+  }
+
+  /* ---- Result banner ---- */
+  .result {
+    border-radius: 14px; padding: 18px 32px; text-align: center;
+    font-size: 1.4rem; font-weight: 800;
+    box-shadow: 0 4px 24px rgba(245,200,66,0.4);
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 340px; width: 100%;
+    background: linear-gradient(135deg, #f5c842, #e8a020);
+    color: #1a0a00;
+  }
+  .result.final-winner {
+    background: linear-gradient(135deg, #69db7c, #2f9e44);
+    color: #fff;
+    box-shadow: 0 4px 28px rgba(105,219,124,0.5);
+    font-size: 1.6rem;
+  }
+  .result .emoji { font-size: 2rem; display: block; margin-bottom: 4px; }
+  .result .label { font-size: 0.8rem; font-weight: 600; opacity: 0.7; margin-bottom: 2px; }
+  .result .sub { font-size: 0.85rem; font-weight: 600; margin-top: 4px; opacity: 0.75; }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<h1>🍺 Pub Draw Wheel</h1>
+<p class="subtitle">Enter your pubs, spin the wheel, find your local!</p>
+
+<div class="container">
+
+  <div class="input-panel">
+    <h2>Enter Your Pubs</h2>
+    <div class="pub-inputs" id="pubInputs"></div>
+    <div class="entry-count" id="entryCount"></div>
+    <div class="warn" id="warnMsg"></div>
+    <div class="btn-row">
+      <button class="spin-btn" id="spinBtn" onclick="startTournament(false)">🎰 Spin!</button>
+      <button class="record-btn" id="recordBtn" onclick="startTournament(true)">⏺ Spin &amp; Save Video</button>
+      <button class="reset-btn" id="resetBtn" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <!-- Elimination log -->
+  <div class="elim-log" id="elimLog">
+    <h3>🗑️ Eliminated</h3>
+    <ul class="elim-list" id="elimList"></ul>
+  </div>
+
+  <div class="wheel-section" id="wheelSection" style="display:none">
+    <div class="wheel-wrapper">
+      <div class="pointer"></div>
+      <canvas id="wheelCanvas" width="340" height="340"></canvas>
+      <div class="hub"></div>
+    </div>
+    <div class="result hidden" id="result">
+      <span class="emoji" id="resultEmoji">🍺</span>
+      <div class="label" id="resultLabel">ELIMINATED!</div>
+      <div id="resultName"></div>
+      <div class="sub" id="resultSub"></div>
+    </div>
+  </div>
+
+</div>
+
+<canvas id="recordCanvas" width="480" height="640"></canvas>
+
+<script>
+const COLORS = ['#e63946','#f4a261','#2a9d8f','#457b9d','#6a4c93'];
+
+// Build inputs
+const inputContainer = document.getElementById('pubInputs');
+for (let i = 0; i < 5; i++) {
+  const row = document.createElement('div');
+  row.className = 'pub-row';
+  row.innerHTML = `
+    <div class="pub-num" style="background:${COLORS[i]};color:#fff">${i+1}</div>
+    <input type="text" id="pub${i}" placeholder="e.g. The Crown, The Red Lion..." maxlength="30">
+  `;
+  inputContainer.appendChild(row);
+}
+
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const cx = 170, cy = 170, r = 160;
+
+const recCanvas = document.getElementById('recordCanvas');
+const rctx = recCanvas.getContext('2d');
+const RW = 480, RH = 640, RCX = 240, RCY = 270, RR = 190;
+
+let currentAngle = 0;
+let spinning = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+
+// Tournament state
+let activePubs = [];      // current pubs still in the draw [{name, colorIndex}]
+let eliminated = [];      // [{name, colorIndex, round}]
+let tournamentRound = 0;
+let tournamentActive = false;
+
+// ---- Helpers ----
+function getInputPubs() {
+  const entries = [];
+  for (let i = 0; i < 5; i++) {
+    const v = document.getElementById(`pub${i}`).value.trim();
+    if (v) entries.push({ name: v, colorIndex: i });
+  }
+  return entries;
+}
+
+function updateUI() {
+  if (tournamentActive) return; // don't mess with UI during tournament
+
+  const pubs = getInputPubs();
+  const count = pubs.length;
+
+  for (let i = 0; i < 5; i++) {
+    const inp = document.getElementById(`pub${i}`);
+    inp.classList.toggle('inactive', inp.value.trim() === '');
+  }
+
+  const countEl = document.getElementById('entryCount');
+  const warnEl  = document.getElementById('warnMsg');
+  const spinBtn  = document.getElementById('spinBtn');
+  const recBtn   = document.getElementById('recordBtn');
+
+  if (count < 2) {
+    countEl.textContent = count === 1 ? '1 pub entered' : '';
+    warnEl.textContent  = 'Enter at least 2 pubs to spin.';
+    spinBtn.disabled = true;
+    recBtn.disabled  = true;
+  } else {
+    countEl.textContent = `${count} pub${count > 1 ? 's' : ''} on the wheel`;
+    warnEl.textContent  = '';
+    spinBtn.disabled = false;
+    recBtn.disabled  = false;
+  }
+
+  if (!spinning) { drawWheel(currentAngle); drawRecordFrame(currentAngle, 'spin', ''); }
+}
+
+// ---- Drawing ----
+function drawWheelFromList(angle, pubs) {
+  const n = pubs.length;
+  const sliceAngle = n > 0 ? (2 * Math.PI) / n : 0;
+  ctx.clearRect(0, 0, 340, 340);
+
+  if (n === 0) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(245,200,66,0.2)'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '16px Segoe UI, sans-serif'; ctx.fillText('Enter pubs above', cx, cy);
+    return;
+  }
+
+  for (let i = 0; i < pubs.length; i++) {
+    const start = angle + i * sliceAngle, end = start + sliceAngle;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, start, end); ctx.closePath();
+    ctx.fillStyle = COLORS[pubs[i].colorIndex % COLORS.length]; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(start + sliceAngle / 2);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px Segoe UI, sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 4;
+    ctx.fillText(pubs[i].name, r - 16, 6, r - 50); ctx.restore();
+  }
+
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI);
+  ctx.strokeStyle = 'rgba(245,200,66,0.6)'; ctx.lineWidth = 5; ctx.stroke();
+
+  const hg = ctx.createRadialGradient(cx, cy, 4, cx, cy, 22);
+  hg.addColorStop(0, '#fff'); hg.addColorStop(1, '#c8a96e');
+  ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 2*Math.PI); ctx.fillStyle = hg; ctx.fill();
+}
+
+function drawWheel(angle) { drawWheelFromList(angle, activePubs.length ? activePubs : getInputPubs()); }
+
+function drawRecordFrameFromList(angle, phase, label, pubs) {
+  const n = pubs.length;
+  const sliceAngle = n > 0 ? (2 * Math.PI) / n : 0;
+
+  rctx.fillStyle = '#1a0a00'; rctx.fillRect(0, 0, RW, RH);
+  rctx.textAlign = 'center';
+  rctx.font = 'bold 32px Segoe UI, sans-serif'; rctx.fillStyle = '#f5c842';
+  rctx.shadowColor = 'rgba(245,200,66,0.5)'; rctx.shadowBlur = 12;
+  rctx.fillText('🍺 Pub Draw Wheel', RCX, 52); rctx.shadowBlur = 0;
+
+  for (let i = 0; i < n; i++) {
+    const start = angle + i * sliceAngle, end = start + sliceAngle;
+    rctx.beginPath(); rctx.moveTo(RCX, RCY); rctx.arc(RCX, RCY, RR, start, end); rctx.closePath();
+    rctx.fillStyle = COLORS[pubs[i].colorIndex % COLORS.length]; rctx.fill();
+    rctx.strokeStyle = 'rgba(0,0,0,0.3)'; rctx.lineWidth = 2; rctx.stroke();
+    rctx.save(); rctx.translate(RCX, RCY); rctx.rotate(start + sliceAngle / 2);
+    rctx.textAlign = 'right'; rctx.fillStyle = '#fff';
+    rctx.font = 'bold 17px Segoe UI, sans-serif';
+    rctx.shadowColor = 'rgba(0,0,0,0.6)'; rctx.shadowBlur = 4;
+    rctx.fillText(pubs[i].name, RR - 18, 7, RR - 55); rctx.restore();
+  }
+
+  rctx.beginPath(); rctx.arc(RCX, RCY, RR, 0, 2*Math.PI);
+  rctx.strokeStyle = 'rgba(245,200,66,0.7)'; rctx.lineWidth = 6; rctx.stroke();
+
+  const hg = rctx.createRadialGradient(RCX, RCY, 4, RCX, RCY, 26);
+  hg.addColorStop(0, '#fff'); hg.addColorStop(1, '#c8a96e');
+  rctx.beginPath(); rctx.arc(RCX, RCY, 26, 0, 2*Math.PI);
+  rctx.fillStyle = hg; rctx.fill();
+  rctx.strokeStyle = 'rgba(0,0,0,0.3)'; rctx.lineWidth = 2; rctx.stroke();
+
+  // Pointer
+  const px = RCX, py = RCY - RR - 8;
+  rctx.beginPath(); rctx.moveTo(px, py+30); rctx.lineTo(px-14, py+4); rctx.lineTo(px+14, py+4); rctx.closePath();
+  rctx.fillStyle = '#f5c842'; rctx.shadowColor = 'rgba(245,200,66,0.9)'; rctx.shadowBlur = 10;
+  rctx.fill(); rctx.shadowBlur = 0;
+
+  if (phase === 'result' && label) {
+    const bx = 40, by = RCY + RR + 22, bw = RW - 80, bh = 72;
+    const grad = rctx.createLinearGradient(bx, by, bx+bw, by+bh);
+    grad.addColorStop(0, '#f5c842'); grad.addColorStop(1, '#e8a020');
+    rctx.beginPath(); rctx.roundRect(bx, by, bw, bh, 14);
+    rctx.fillStyle = grad; rctx.shadowColor = 'rgba(245,200,66,0.5)'; rctx.shadowBlur = 20;
+    rctx.fill(); rctx.shadowBlur = 0;
+    rctx.textAlign = 'center'; rctx.fillStyle = '#1a0a00';
+    rctx.font = 'bold 13px Segoe UI, sans-serif'; rctx.fillText('ELIMINATED!', RCX, by + 22);
+    rctx.font = 'bold 22px Segoe UI, sans-serif'; rctx.fillText('🗑️ ' + label, RCX, by + 52);
+  }
+  if (phase === 'winner' && label) {
+    const bx = 40, by = RCY + RR + 22, bw = RW - 80, bh = 72;
+    const grad = rctx.createLinearGradient(bx, by, bx+bw, by+bh);
+    grad.addColorStop(0, '#69db7c'); grad.addColorStop(1, '#2f9e44');
+    rctx.beginPath(); rctx.roundRect(bx, by, bw, bh, 14);
+    rctx.fillStyle = grad; rctx.shadowColor = 'rgba(105,219,124,0.5)'; rctx.shadowBlur = 20;
+    rctx.fill(); rctx.shadowBlur = 0;
+    rctx.textAlign = 'center'; rctx.fillStyle = '#fff';
+    rctx.font = 'bold 13px Segoe UI, sans-serif'; rctx.fillText("TONIGHT'S PUB IS...", RCX, by + 22);
+    rctx.font = 'bold 22px Segoe UI, sans-serif'; rctx.fillText('🏆 ' + label, RCX, by + 52);
+  }
+}
+
+function drawRecordFrame(angle, phase, label) {
+  drawRecordFrameFromList(angle, phase, label, activePubs.length ? activePubs : getInputPubs());
+}
+
+// ---- Elimination log ----
+function addElimEntry(name, colorIndex, round) {
+  const log = document.getElementById('elimLog');
+  const list = document.getElementById('elimList');
+  log.style.display = 'block';
+  const li = document.createElement('li');
+  li.className = 'elim-item';
+  li.innerHTML = `
+    <span class="elim-dot" style="background:${COLORS[colorIndex % COLORS.length]}"></span>
+    <span>${name}</span>
+    <span class="elim-round">Round ${round}</span>
+  `;
+  list.appendChild(li);
+}
+
+// ---- Tournament ----
+function startTournament(record) {
+  if (spinning) return;
+  const pubs = getInputPubs();
+  if (pubs.length < 2) return;
+
+  // Lock inputs during tournament
+  for (let i = 0; i < 5; i++) document.getElementById(`pub${i}`).disabled = true;
+  document.getElementById('resetBtn').style.display = 'flex';
+  document.getElementById('elimLog').style.display = 'none';
+  document.getElementById('elimList').innerHTML = '';
+
+  activePubs = [...pubs];
+  eliminated = [];
+  tournamentRound = 0;
+  tournamentActive = true;
+  isRecording = record;
+  recordedChunks = [];
+
+  if (record) {
+    const stream = recCanvas.captureStream(30);
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+    mediaRecorder = new MediaRecorder(stream, { mimeType });
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+    mediaRecorder.start(100);
+    setStatus('recording', '⏺ Recording… tournament in progress!');
+  }
+
+  document.getElementById('wheelSection').style.display = 'flex';
+  spinNextRound();
+}
+
+function spinNextRound() {
+  if (activePubs.length <= 1) {
+    finishTournament();
+    return;
+  }
+
+  tournamentRound++;
+  const remaining = activePubs.length;
+  document.getElementById('entryCount').textContent =
+    `Round ${tournamentRound} — ${remaining} pubs remaining`;
+  document.getElementById('warnMsg').textContent = '';
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('recordBtn').disabled = true;
+
+  const n = activePubs.length;
+  const sliceAngle = (2 * Math.PI) / n;
+  const extraRotations = (5 + Math.random() * 5) * 2 * Math.PI;
+  const stopAngle = Math.random() * 2 * Math.PI;
+  const totalRotation = extraRotations + stopAngle;
+  const duration = 3500 + Math.random() * 1500;
+  const startTime = performance.now();
+  const startAngle = currentAngle;
+  const pubsThisRound = [...activePubs];
+
+  spinning = true;
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    currentAngle = startAngle + totalRotation * easeOut(t);
+
+    drawWheelFromList(currentAngle, pubsThisRound);
+    if (isRecording) drawRecordFrameFromList(currentAngle, 'spin', '', pubsThisRound);
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      spinning = false;
+
+      // Find eliminated pub (pointer at top = -π/2)
+      const pointerAngle = -Math.PI / 2;
+      let norm = ((pointerAngle - currentAngle) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+      const idx = Math.floor(norm / sliceAngle) % n;
+      const eliminated_pub = pubsThisRound[idx];
+
+      // Remove from active
+      activePubs = activePubs.filter((_, i) => i !== idx);
+      addElimEntry(eliminated_pub.name, eliminated_pub.colorIndex, tournamentRound);
+
+      // Show eliminated banner
+      const resEl = document.getElementById('result');
+      resEl.className = 'result';
+      document.getElementById('resultEmoji').textContent = '🗑️';
+      document.getElementById('resultLabel').textContent = 'ELIMINATED!';
+      document.getElementById('resultName').textContent = eliminated_pub.name;
+      document.getElementById('resultSub').textContent =
+        activePubs.length > 1
+          ? `${activePubs.length} pubs remaining — next spin in 2s…`
+          : activePubs.length === 1
+            ? 'One pub left — finding winner…'
+            : '';
+      resEl.classList.remove('hidden');
+      resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Hold the result banner on the recording canvas for 2s, then continue
+      if (isRecording) {
+        const holdStart = performance.now();
+        function holdElim(now2) {
+          drawRecordFrameFromList(currentAngle, 'result', eliminated_pub.name, pubsThisRound);
+          if (now2 - holdStart < 2000) {
+            requestAnimationFrame(holdElim);
+          } else {
+            drawWheelFromList(currentAngle, activePubs);
+            drawRecordFrameFromList(currentAngle, 'spin', '', activePubs);
+            setTimeout(spinNextRound, 1500);
+          }
+        }
+        requestAnimationFrame(holdElim);
+      } else {
+        // Non-recording: just use setTimeout as before
+        setTimeout(() => {
+          drawWheelFromList(currentAngle, activePubs);
+          setTimeout(spinNextRound, 1500);
+        }, 2000);
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function finishTournament() {
+  const winner = activePubs[0];
+
+  const resEl = document.getElementById('result');
+  resEl.className = 'result final-winner';
+  document.getElementById('resultEmoji').textContent = '🏆';
+  document.getElementById('resultLabel').textContent = "TONIGHT'S PUB IS...";
+  document.getElementById('resultName').textContent = winner.name;
+  document.getElementById('resultSub').textContent = 'Last pub standing!';
+  resEl.classList.remove('hidden');
+  resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  document.getElementById('entryCount').textContent = '🏆 We have a winner!';
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('recordBtn').disabled = true;
+
+  // Draw final wheel (just the winner)
+  drawWheelFromList(currentAngle, [winner]);
+
+  if (isRecording) {
+    const resultStart = performance.now();
+    function holdResult(now2) {
+      drawRecordFrameFromList(currentAngle, 'winner', winner.name, [winner]);
+      if (now2 - resultStart < 3000) {
+        requestAnimationFrame(holdResult);
+      } else {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = 'pub-draw.webm'; a.click();
+          URL.revokeObjectURL(url);
+          setStatus('done', '✅ Video saved! Check your downloads folder.');
+        };
+      }
+    }
+    requestAnimationFrame(holdResult);
+  }
+}
+
+function resetAll() {
+  activePubs = []; eliminated = []; tournamentRound = 0; tournamentActive = false;
+  currentAngle = 0; spinning = false;
+
+  for (let i = 0; i < 5; i++) document.getElementById(`pub${i}`).disabled = false;
+  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('elimLog').style.display = 'none';
+  document.getElementById('elimList').innerHTML = '';
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('wheelSection').style.display = 'none';
+  document.getElementById('statusBar').className = 'status-bar';
+  updateUI();
+}
+
+function setStatus(type, msg) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg; bar.className = 'status-bar active ' + type;
+}
+
+// Init
+updateUI();
+for (let i = 0; i < 5; i++) {
+  document.getElementById(`pub${i}`).addEventListener('input', updateUI);
+}
+</script>
+</body>
+</html>
